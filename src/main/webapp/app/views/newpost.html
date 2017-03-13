@@ -1,15 +1,18 @@
-<div class="div-create-post">
+<div class="div-create-post" ng-form="createPost">
 	<section class="div-create-post-title">
-		<input type="text" id="postTitle" placeholder="Title This Post"/><span id="postTitleError"></span>
+		<input type="text" ng-model='title' name="title" id="postTitle" placeholder="Title This Post" ng-class="{error: showMsgs && createPost.title.$error.required}" required/>
+		<p id="postTitleError" ng-show="showMsgs && createPost.title.$error.required" class="error-msg">Please enter title.</p>
 	</section>
 	<section class="div-create-post-article">
-		<textarea id="postArticle" placeholder="Add details for the post"></textarea><span id="postArticleError"></span>
+		<textarea ng-model='article' name="article" id="postArticle" placeholder="Add details for the post" ng-class="{error: showMsgs && createPost.article.$error.required}"  required/></textarea>
+		<p id="postArticleError" ng-show="showMsgs && createPost.article.$error.required"  class="error-msg">Please add details.</p>
 	</section>
 	<section class="div-create-post-tags">
-		<input type="text" id="tagPost" placeholder="Tag This Post"/><span id="tagPostError"></span>
+		<input type="text" ng-model='tags' name="tags" id="tagPost" placeholder="Tag This Post" ng-class="{error: showMsgs && createPost.tags.$error.required}"  required/>
+		<p ng-show="showMsgs && createPost.tags.$error.required" class="error-msg">Please add tags.</p>
 	</section>
 	<div class="div-create-post-btns">
-		<button id="postBtn">Post</button>
-		<button id="postCancelBtn">Cancel</button>
+		<button id="postBtn" ng-click="addPost()">Post</button>
+		<button id="postCancelBtn" ng-click="cancel()">Cancel</button>
 	</div>
  </div>

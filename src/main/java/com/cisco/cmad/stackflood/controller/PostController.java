@@ -50,7 +50,7 @@ public class PostController {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/reply/{postid}")
+	@Path("/{postid}/replies")
 	public Response addReply(@PathParam("postid") String postId, Reply reply){
 		Post post = new PostImpl();
 		PostDetails postDetailsResponse = post.addReply(postId, reply);
@@ -60,7 +60,7 @@ public class PostController {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/view/{postid}")
+	@Path("/{postid}/views")
 	public Response updateViews(@PathParam("postid") String postId){
 		Post post = new PostImpl();
 		post.updteViews(postId);

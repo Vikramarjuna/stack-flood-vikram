@@ -4,7 +4,10 @@
 	color: red;
 	font-size: 14px;
 	text-align: left;
+	margin-bottom:10px;
 }
+
+/*
 
 .login-page {
 	position: fixed;
@@ -21,6 +24,8 @@
 	transform: translate(-50%, -50%);
 	margin-top: 90px;
 }
+
+*/
 
 [class*='-div'] {
 	position: relative;

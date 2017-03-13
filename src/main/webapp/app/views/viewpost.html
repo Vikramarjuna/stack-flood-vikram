@@ -7,18 +7,31 @@
 				<a id="crdtags-{{$index}}">{{tag}}</a>
 			</div>
 			<div class="div-show-post-footer-right">
-				<div class="div-show-post-created-date">{{post.createdDate}}</div>
+				<div class="div-show-post-created-date">{{post.createdDate| date:'medium'}}</div>
 				<div class="div-show-post-createdby">{{post.createdBy}}</div>
 			</div>
 		</div>
 	</div>
-	<div class="div-post-reply">
+	<div style="font-size: 18px" ng-show="post.replies.length > 0">Comments</div>
+	<div class="div-show-post-replies" ng-repeat="reply in post.replies">
+	<div class="div-show-post-reply">
+	  <div>{{reply.article}}</div>
+	  <div class="div-show-post-reply-right">
+	     <div class="div-show-post-created-date">{{reply.createdDate | date:'medium'}}</div>
+	     <div class="div-show-post-createdby">{{reply.createdBy}}</div>
+	  </div>
+	</div>
+	
+	</div>
+	<div class="div-post-reply" ng-form="replyPost">
 		<section class="div-replyto-post-article">
-			<textarea id="replyPostArticle" placeholder="Add your reply"></textarea><span id="replyPostArticleError"></span>
+			<textarea id="replyPostArticle" placeholder="{{post.replies.length > 0 ?'Give your comment': 'Be the first to comment'}}" ng-model="reply" name="reply"></textarea>
+			<p ng-show="showMsgs && createPost.tags.$error.required" class="error-msg">Enter Comment</p>
+			<span id="replyPostArticleError"></span>
 		</section>
 		<div class="div-create-reply-btns">
-			<button id="replyBtn">Reply</button>
-			<button id="replyPostCancelBtn">Cancel</button>
+			<button id="replyBtn" ng-click="addReply()">Comment</button>
+			<button id="replyPostCancelBtn" ng-click="cancel()">Cancel</button>
 		</div>
 	</div>
 </div>
