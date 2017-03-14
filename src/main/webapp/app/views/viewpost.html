@@ -1,3 +1,11 @@
+<div id="over" style="position: absolute; width: 100%; height: 100%"
+		ng-hide="!loading">
+		<div style="position: absolute; top: 50%; left: 50%;">
+			<div class="sloader"></div>
+			<p>Loading....</p>
+
+		</div>
+</div>
 <div class="div-show-post">
 	<div class="div-show-post-title">{{post.title}}</div>
 	<div class="div-show-post-details">
@@ -30,7 +38,9 @@
 			<span id="replyPostArticleError"></span>
 		</section>
 		<div class="div-create-reply-btns">
-			<button id="replyBtn" ng-click="addReply()">Comment</button>
+			<button id="replyBtn" ng-click="addReply()" ng-disabled="loading">
+				{{loading? 'Commenting': 'Comment' }}<span ng-show="loading"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+			</button>
 			<button id="replyPostCancelBtn" ng-click="cancel()">Cancel</button>
 		</div>
 	</div>

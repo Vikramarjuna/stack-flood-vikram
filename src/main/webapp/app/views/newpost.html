@@ -12,7 +12,9 @@
 		<p ng-show="showMsgs && createPost.tags.$error.required" class="error-msg">Please add tags.</p>
 	</section>
 	<div class="div-create-post-btns">
-		<button id="postBtn" ng-click="addPost()">Post</button>
+		<button id="postBtn" ng-click="addPost()" ng-disabled="loading">
+			{{loading? 'Posting': 'Post' }}<span ng-show="loading"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+		</button>
 		<button id="postCancelBtn" ng-click="cancel()">Cancel</button>
 	</div>
  </div>

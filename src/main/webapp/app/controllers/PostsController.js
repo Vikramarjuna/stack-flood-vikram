@@ -11,6 +11,7 @@ angular.module('stack-flood.controllers', ['ngRoute','ngMaterial', 'stack-flood.
 					createdBy : userService.username
 				};
 			postsservice.addReply(data,$scope.post.postId).then(function(added){
+				$scope.loading=false;
 				$scope.post=added;
 				//window.location="#/view/post/"+$scope.post.postId;
 				
@@ -33,6 +34,7 @@ angular.module('stack-flood.controllers', ['ngRoute','ngMaterial', 'stack-flood.
 				$scope.showMsgs=true;
 				return;
 			}
+			$scope.loading=true;
 			if(userService.isAuthenticated) {
 				saveReply();
 			}else{
@@ -56,7 +58,6 @@ angular.module('stack-flood.controllers', ['ngRoute','ngMaterial', 'stack-flood.
 		}
 		$scope.cancel=function(e){
     		$location.path("/posts");
-			$rootScope.$apply();
     	}
  	}).
 	controller('listpostscontroller', function($scope, _posts) {
@@ -73,7 +74,7 @@ angular.module('stack-flood.controllers', ['ngRoute','ngMaterial', 'stack-flood.
 					createdBy : userService.username
 				};
     		postsservice.addPost(data).then(function(added){
-    			$rootScope.layout.loading=false;
+    			$scope.loading=false;
 				alert = $mdDialog.alert({
 			        title: 'Post Saved',
 			        textContent: 'Post Saved successfully',
@@ -102,19 +103,18 @@ angular.module('stack-flood.controllers', ['ngRoute','ngMaterial', 'stack-flood.
     	}
     	$scope.cancel=function(e){
     		$location.path("/posts");
-			$rootScope.$apply();
     	}
 		$scope.addPost=function(e){
 			if(!$scope.createPost.$valid){
 				$scope.showMsgs=true;
 				return;
 			}
-			$rootScope.layout.loading=true;
+			$scope.loading=true;
 			if(userService.isAuthenticated) {
 				createPost();
 				
 			}else{
-				$rootScope.layout.loading=false;
+				$scope.loading=false;
 				$rootScope.postLoginAction=createPost;
 				$mdDialog.show({
 				      controller: 'authController',
@@ -178,7 +178,8 @@ angular.module('stack-flood.controllers', ['ngRoute','ngMaterial', 'stack-flood.
  	}
  	}).
  	controller('userController', function($scope, $rootScope,$mdDialog, $routeParams, $location, userService) {
- 		
+ 		$scope.loading=false;
+ 		$scope.searchButtonText="Regsiter";
  		$scope.hide = function() {
 		      $mdDialog.hide();
 		    };
@@ -201,9 +202,12 @@ angular.module('stack-flood.controllers', ['ngRoute','ngMaterial', 'stack-flood.
 				email : $scope.email,
 				phoneNumber : $scope.phonenumber
 			};
-			$rootScope.layout.loading=true;
+			$scope.loading=true;
+			$scope.searchButtonText="Regsitering";
 			userService.addUser(data).then(function(added){
-				$rootScope.layout.loading=false;
+				console.log($scope.loading);
+				$scope.loading=false;
+				console.log($scope.loading);
 				alert = $mdDialog.alert({
 			        title: 'User Registered',
 			        textContent: 'Registration successfully',
@@ -237,6 +241,7 @@ angular.module('stack-flood.controllers', ['ngRoute','ngMaterial', 'stack-flood.
 				    });
 				    */
 			},function(error){
+				$scope.loading=false;
 				$scope.showMsgs=true;
 				console.log(error);
 				console.log(error.responseText);
@@ -248,9 +253,9 @@ angular.module('stack-flood.controllers', ['ngRoute','ngMaterial', 'stack-flood.
 					$scope.userCreateErr="Unknown Error";
 				}
 			});
+			console.log($scope.loading);
 		}else{
 			$scope.showMsgs=true;
 		}
-			
  		}
  	});

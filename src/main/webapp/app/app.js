@@ -61,4 +61,3 @@ app.run(function ($rootScope, $location,$route, $timeout) {
         $rootScope.layout.loading = false;
     });
 });
-
