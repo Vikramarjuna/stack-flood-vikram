@@ -93,6 +93,12 @@
 			<artifactId>morphia</artifactId>
 			<version>${mongo-db-marphia.version}</version>
 		</dependency>
+		<!-- JSON Web Tokens -->
+		<dependency>  
+    		<groupId>io.jsonwebtoken</groupId>
+    		<artifactId>jjwt</artifactId>
+   			<version>0.7.0</version>
+		</dependency> 
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

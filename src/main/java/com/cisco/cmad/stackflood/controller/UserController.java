@@ -13,6 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 import com.cisco.cmad.stackflood.api.User;
@@ -20,10 +21,11 @@ import com.cisco.cmad.stackflood.model.Credentials;
 import com.cisco.cmad.stackflood.model.SuccessResponse;
 import com.cisco.cmad.stackflood.model.UserDetails;
 import com.cisco.cmad.stackflood.service.UserImpl;
+import com.cisco.cmad.stackflood.util.JWSTokenUtils;
 
 @Path("/user")
 public class UserController {
-
+	private static final int TOKEN_LIFE_MILLI_SECONDS=1*60*60*1000;
 	@Context
     private HttpServletResponse servletResponse;
 	
@@ -43,7 +45,10 @@ public class UserController {
 	    myCookie.setMaxAge(60 * 60);
 	    myCookie.setPath("/");
 	    servletResponse.addCookie(myCookie);
-	    return Response.ok().entity(userDetails).build();
+	    
+	    NewCookie cookie=new NewCookie("CAN-RefreshToken", JWSTokenUtils.createToken(userDetails.getUserName(),TOKEN_LIFE_MILLI_SECONDS), "/", "", "", TOKEN_LIFE_MILLI_SECONDS, false, true);
+	    		Response res= Response.ok().cookie(cookie).entity(userDetails).build();
+	    return res;
 	}
 	
 	@GET
