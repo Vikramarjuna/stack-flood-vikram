@@ -148,7 +148,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<outputDirectory>/Users/vikmalap/Documents/CMAD/programs/apache-tomcat-8.5.11/webapps</outputDirectory>
+					<outputDirectory>taget/site</outputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>

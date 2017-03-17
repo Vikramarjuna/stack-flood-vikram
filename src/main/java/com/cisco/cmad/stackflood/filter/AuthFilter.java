@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.cisco.cmad.stackflood.util.JWSTokenUtils;
+
 public class AuthFilter implements Filter{
 	
 	private static final String IGNORE_AUTH_PROP_NAME = "bypassAuthPatterns";
@@ -46,37 +48,45 @@ public class AuthFilter implements Filter{
 		String contextPath = httpRequest.getContextPath();
 		String path = httpRequest.getRequestURI();
         path = path.substring(contextPath.length());
-        
-		if (checkIfBypassUrl(path)) {
-            filterChain.doFilter(request, response);
-        } else{
+        if(checkIfAuthRequired(path)){
         	HttpSession session = httpRequest.getSession(false);
     		Cookie[] cookies = httpRequest.getCookies();
     		String sessionUserName = null;
     		String cookieUserName = null;
+    		String token=null;
     		if(null != cookies && cookies.length > 0){
     			for (Cookie cookie : cookies) {
-    				if(cookie.getName().equals("user-name")){
-    					cookieUserName = cookie.getValue();
+    				if(cookie.getName().equals("CAN-RefreshToken")){
+    					token = cookie.getValue();
     					break;
     				}
     			}
     		}
-    		System.out.println("cookieUserName: "+cookieUserName);
-    		sessionUserName = (null != session?session.getAttribute("user-name").toString():null);
-    		System.out.println("sessionUserName: "+sessionUserName);
-            if (session != null && sessionUserName != null && cookieUserName != null && sessionUserName.equals(cookieUserName)) {
-            	filterChain.doFilter(request, response);
-            } else {
-            	httpServletResponse.setContentType("application/json");
+    		if(token!=null){
+    			try{
+    			JWSTokenUtils.parseToken(token);
+    			filterChain.doFilter(request, response);
+    			}catch(Exception e){
+    				httpServletResponse.setContentType("application/json");
+                	httpServletResponse.setStatus(401);
+                	PrintWriter out = httpServletResponse.getWriter();
+                	out.print("{ \"httpStatusCode\" : \"401\", \"httpStatusMessage\" : \"Unauthorized!\" }");
+                	out.flush();
+                	out.close();
+    			}
+    		}else{
+    			httpServletResponse.setContentType("application/json");
             	httpServletResponse.setStatus(401);
             	PrintWriter out = httpServletResponse.getWriter();
             	out.print("{ \"httpStatusCode\" : \"401\", \"httpStatusMessage\" : \"Unauthorized!\" }");
             	out.flush();
             	out.close();
-            }
+    		}
+    		
         }
-		
+        else{
+        	filterChain.doFilter(request, response);
+        }
 	}
 	/*
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
@@ -134,8 +144,8 @@ public class AuthFilter implements Filter{
     }
 	private boolean checkIfAuthRequired(String path) {
         boolean bypassUrl = false;
-        if (!bypassUrls.isEmpty()) {
-            for (String urlPattern : bypassUrls) {
+        if (!authUrls.isEmpty()) {
+            for (String urlPattern : authUrls) {
             	System.out.println("Path : "+path);
             	System.out.println("UrlPattern : "+urlPattern);
                 if (path.equals(urlPattern)) {
